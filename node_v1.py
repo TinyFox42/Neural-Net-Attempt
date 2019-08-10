@@ -3,10 +3,11 @@ class node(object):
     def __init__(self):
         self.sources=[]
         self.weights={} #later on, this should be random values, from a normal distribution centered around 0, sigma=1
+        self.bias=0 #later on, this probably shouldn't start as 0. Or maybe it should
         self.val=None
         self.loop_catch=False
     def decide(self):
-        n=0
+        n=self.bias
         for s in self.sources:
             n+=self.weights[s]*s.get_val()
         self.val=node.activation(n)
@@ -33,3 +34,4 @@ class start_node(object):
         self.val=x
     def get_val(self):
         return self.val
+
