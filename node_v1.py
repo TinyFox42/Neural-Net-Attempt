@@ -34,4 +34,3 @@ class start_node(object):
         self.val=x
     def get_val(self):
         return self.val
-
