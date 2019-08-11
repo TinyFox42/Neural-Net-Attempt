@@ -1,4 +1,5 @@
 import math
+import random
 class node(object):
     def __init__(self):
         self.sources=[]
@@ -22,6 +23,11 @@ class node(object):
         #prepare for next run
         self.val=None
         self.loop_catch=False
+    def add_link(self, n, w=None):
+        if w==None:
+            w=random.randint(-1,1)
+        self.sources.append(n)
+        self.weights[n]=w
     @staticmethod  
     def activation(x):
         a=1/(1+math.e**(-x))

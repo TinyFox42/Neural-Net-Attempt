@@ -1,4 +1,5 @@
 import node_v1
+#reload(node_v1)#only uncomment if you need to reload it
 class net(object):
     def __init__(self, ins, outs):
         self.ins=[]
