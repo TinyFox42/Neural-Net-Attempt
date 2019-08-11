@@ -39,4 +39,8 @@ class start_node(object):
     def assign(self, x):
         self.val=x
     def get_val(self):
+        if self.val==None:
+            raise NameError, "This start node is not yet assigned."
         return self.val
+    def reset(self):
+        self.val=None
