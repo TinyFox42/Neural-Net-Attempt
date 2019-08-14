@@ -3,8 +3,23 @@ import math
 def random_weight():
     #invNorm mean=0 stDev=1
     return random.normalvariate(0, 1)
+def mutate_weight(w):
+    return w+random.normalvariate(0, 0.5)
     
+node_chance=5
 class net(object):
+    @staticmethod
+    def activate(x):
+        a=1/(1+math.e**(-x))
+        return a
+        
+    def mutate(self):
+        #right now just has some random variations to the weights, maybe does something else later on
+        for l in self.weights:
+            for i in range(len(l)):
+                w=mutate_weight(l[i])
+                l[i]=w
+        
     def __init__(self, inputs, outputs, inners=[]):
         self.vals=[[None]*inputs]
         for l in inners:
@@ -26,27 +41,39 @@ class net(object):
             self.weights+=[a]
     
     def calc(self):
-        for i in range(1,self.vals):#layers loop
-            for j in range(self.vals[i]): #nodes loop
+        for i in range(1,len(self.vals)):#layers loop
+            for j in range(len(self.vals[i])): #nodes loop
                 x=0 #count of effects
                 w=self.weights[i-1][j] #weights for this node
-                for k in range(self.vals[i-1]): #lower nodes
+                for k in range(len(self.vals[i-1])): #lower nodes
                     n=w[k]*self.vals[i-1][k]
                     x+=n
                 x+=w[-1]
                 x=net.activate(x)
                 self.vals[i][j]=x#later on, make this a real decision function
+    
     def assign(self, ins):
         if len(self.vals[0])!=len(ins):
             return "Input count mismatch. This net should have {0} inputs, not {1}.".format(len(self.vals[0]), len(ins))
         for i in range(len(ins)):
             self.vals[0][i]=ins[i]
+    
+    def set_weights(self, weights):
+        #maybe later on I'll put in some checks, but for now this should be fine.
+        self.weights=weights
+    
+    def clone_data(self):
+        ins=len(self.vals[0])
+        outs=len(self.vals[-1])
+        inners=[]
+        for i in range(1, len(self.vals)-1):
+            inners+=[len(self.vals[i])]
+        return ins, outs, inners, self.weights
+    
+    
+        
     def retrieve(self):
         s=[]
         for n in self.vals[-1]:
             s+=[n]
         return s
-    @staticmethod
-    def activate(x):
-        a=1/(1+math.e**(-x))
-        return a
