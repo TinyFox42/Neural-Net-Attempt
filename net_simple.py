@@ -6,7 +6,7 @@ def random_weight():
 def mutate_weight(w):
     return w+random.normalvariate(0, 0.5)
     
-node_chance=5
+weight_chance=5
 class net(object):
     @staticmethod
     def activate(x):
@@ -17,8 +17,9 @@ class net(object):
         #right now just has some random variations to the weights, maybe does something else later on
         for l in self.weights:
             for i in range(len(l)):
-                w=mutate_weight(l[i])
-                l[i]=w
+                if random.randint(0,100)<=weight_chance:
+                    w=mutate_weight(l[i])
+                    l[i]=w
         
     def __init__(self, inputs, outputs, inners=[]):
         self.vals=[[None]*inputs]
@@ -70,8 +71,6 @@ class net(object):
             inners+=[len(self.vals[i])]
         return ins, outs, inners, self.weights
     
-    
-        
     def retrieve(self):
         s=[]
         for n in self.vals[-1]:
