@@ -17,7 +17,7 @@ class population(object):
                 n[0].assign(qs[i])
                 n[0].calc()
                 x=n[0].retrieve()
-                if x == ans[i]:
+                if x == ans[i]: #you know, this probably doesn't work
                     n[1]+=1
                 else:
                     n[1]-=1
@@ -42,3 +42,12 @@ class population(object):
             #ok, this should kinda work
         self.pop=l
         
+    def repop(self):
+        cs=[]
+        for i in range(len(self.pop)):
+            d=self.pop[i][0].clone_data()
+            n=net_simple.net(d[0], d[1], d[2])
+            n.set_weights(d[3])
+            n.mutate()
+            cs+=[[n, 0]]
+        self.pop+=cs
