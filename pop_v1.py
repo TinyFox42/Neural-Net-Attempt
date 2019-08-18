@@ -1,6 +1,13 @@
 import net_simple
-from numpy import median
+import numpy
 import random
+def simple_ans_check(ans, ans_data):
+    #the ans data should be the index that should be the highest
+    m=max(ans)
+    n=ans.index(m)
+    if n==ans_data:
+        return 1
+    return -1
 class population(object):
     def __init__(self, ins, outs, pop, inners=[]):
         if (pop%2)!=0:
@@ -11,21 +18,18 @@ class population(object):
             n=net_simple.net(ins, outs, inners)
             n.random_weights()
             self.nets+=[[n, 0]]
-    def test(self, qs, ans):
+    def test(self, qs, ans_data, ans_function=simple_ans_check):
         for n in self.nets:
             for i in range(len(qs)):
                 n[0].assign(qs[i])
                 n[0].calc()
                 x=n[0].retrieve()
-                if x == ans[i]: #you know, this probably doesn't work
-                    n[1]+=1
-                else:
-                    n[1]-=1
+                n[1]+=ans_function(x, ans_data[i])
     def cull(self):
         tot=[]
         for n in self.nets:
             tot+=n[1]
-        m=median(tot)
+        m=numpy.median(tot)
         l=[]
         w=[]
         for n in self.nets:
@@ -51,3 +55,12 @@ class population(object):
             n.mutate()
             cs+=[[n, 0]]
         self.pop+=cs
+        
+    def get_stats(self):
+        #just gives a few statistics about the scores. Should be called in between testing and culling
+        l=[]
+        for n in self.nodes:
+            l+=n[1]
+        mean=numpy.mean(l)
+        pers=numpy.percentile(l, [0,10,20,30,40,50,60,70,80,90,100])
+        return mean, pers
