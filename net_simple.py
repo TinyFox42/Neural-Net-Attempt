@@ -15,11 +15,12 @@ class net(object):
         
     def mutate(self):
         #right now just has some random variations to the weights, maybe does something else later on
-        for l in self.weights:
-            for i in range(len(l)):
-                if random.randint(1,100)<=weight_chance:
-                    w=mutate_weight(l[i])
-                    l[i]=w
+        for l in self.weights:#layer
+            for s in l:#node_target
+                for i in range(len(s)):#node_source
+                    if random.randint(1,100)<=weight_chance:
+                        w=mutate_weight(s[i])
+                        s[i]=w
         
     def __init__(self, inputs, outputs, inners=[]):
         self.vals=[[None]*inputs]
