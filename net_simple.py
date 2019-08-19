@@ -17,7 +17,7 @@ class net(object):
         #right now just has some random variations to the weights, maybe does something else later on
         for l in self.weights:
             for i in range(len(l)):
-                if random.randint(0,100)<=weight_chance:
+                if random.randint(1,100)<=weight_chance:
                     w=mutate_weight(l[i])
                     l[i]=w
         
