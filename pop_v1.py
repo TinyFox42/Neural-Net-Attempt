@@ -12,6 +12,7 @@ class population(object):
     def __init__(self, ins, outs, pop, inners=[]):
         if (pop%2)!=0:
             pop+=1#Nope, just nope
+        self.gen=0
         self.pop=pop
         self.nets=[]
         for i in range(pop):
@@ -19,6 +20,7 @@ class population(object):
             n.random_weights()
             self.nets+=[[n, 0]]
     def test(self, qs, ans_data, ans_function=simple_ans_check):
+        self.get+=1
         for n in self.nets:
             for i in range(len(qs)):
                 n[0].assign(qs[i])
@@ -63,4 +65,4 @@ class population(object):
             l+=n[1]
         mean=numpy.mean(l)
         pers=numpy.percentile(l, [0,10,20,30,40,50,60,70,80,90,100])
-        return mean, pers
+        return self.gen, mean, pers
