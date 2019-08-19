@@ -6,7 +6,7 @@ def make_qs(n):
     q=[]
     a=[]
     for i in range(n):
-        x=random.randint(1,100)
+        x=random.randint(1,1000)
         x*=random.choice([-1,1])
         q+=[[x]]
         if x>0:
@@ -17,13 +17,14 @@ def make_qs(n):
 
 def step(pop):
     #Calls some functions on the pop. The net will be modified. No real need to return it, so it doesn't
-    qs,ans=make_qs(100)
+    qs,ans=make_qs(1000)
     pop.test(qs,ans)
-    g,m,p=pop.get_stats()
+    g,m,p,bst=pop.get_stats()
     print "Generation: {0}".format(g)
     print "Mean score: {0}".format(m)
     print "Percentiles:"
     for i in [0,1,2,3,4,5,6,7,8,9,10]:
         print "\t{0}th: {1}".format(i*10, p[i])
+    print bst.weights
     pop.cull()
     pop.repop()

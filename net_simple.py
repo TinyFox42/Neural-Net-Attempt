@@ -1,3 +1,5 @@
+import decimal
+decimal.getcontext().prec = 100
 import random 
 import math
 def random_weight():
@@ -10,6 +12,8 @@ weight_chance=5
 class net(object):
     @staticmethod
     def activate(x):
+        if x<-10: #because when it tries to do this, it will get close to an overflow error with the exponenet
+            return 0
         a=1/(1+math.e**(-x))
         return a
         
@@ -77,3 +81,4 @@ class net(object):
         for n in self.vals[-1]:
             s+=[n]
         return s
+        

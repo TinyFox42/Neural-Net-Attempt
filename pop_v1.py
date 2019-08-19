@@ -39,31 +39,39 @@ class population(object):
             if n[1]>m:
                 l+=[[n[0],0]]
             if n[1]==m:
-                w+=[n]#please no. this would be so annoying to deal with
+                w+=[n[0]]#please no. this would be so annoying to deal with
         if len(w)>0:
             #oh god, why
-            d=(len(self.pop)/2)-len(l)
+            d=(self.pop/2)-len(l)
             for i in range(d):
                 x=random.randint(0,len(w)-1)
                 l+=[[w.pop(x),0]]
             #ok, this should kinda work
-        self.pop=l
+        self.nets=l
         
     def repop(self):
         cs=[]
-        for i in range(len(self.pop)):
-            d=self.pop[i][0].clone_data()
+        for i in range(len(self.nets)):
+            d=self.nets[i][0].clone_data()
             n=net_simple.net(d[0], d[1], d[2])
             n.set_weights(d[3])
             n.mutate()
             cs+=[[n, 0]]
-        self.pop+=cs
+        self.nets+=cs
         
     def get_stats(self):
         #just gives a few statistics about the scores. Should be called in between testing and culling
         l=[]
         for n in self.nets:
             l+=[n[1]]
+        mx=max(l)
+        best=None
+        i=0
+        while best==None:
+            if self.nets[i][1]==mx:
+                best=self.nets[i][0]
+            else:
+                i+=1
         mean=numpy.mean(l)
         pers=numpy.percentile(l, [0,10,20,30,40,50,60,70,80,90,100])
-        return self.gen, mean, pers
+        return self.gen, mean, pers,best
