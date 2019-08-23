@@ -28,3 +28,6 @@ def step(pop):
     print bst.weights
     pop.cull()
     pop.repop()
+    
+def make_pop(n):
+    return pop_v1.population(1,2,n)
