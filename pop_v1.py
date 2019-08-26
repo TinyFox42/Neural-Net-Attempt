@@ -75,3 +75,17 @@ class population(object):
         mean=numpy.mean(l)
         pers=numpy.percentile(l, [0,10,20,30,40,50,60,70,80,90,100])
         return self.gen, mean, pers,best
+    def fancy_stats(self):
+        g,m,p,bst=self.get_stats()
+        n=""
+        n+="Generation: {0}".format(g)
+        n+="\n"
+        n+= "Mean score: {0}".format(m)
+        n+="\n"
+        n+= "Percentiles:"
+        for i in [0,1,2,3,4,5,6,7,8,9,10]:
+            n+="\n"
+            n+= "\t{0}th: {1}".format(i*10, p[i])
+        n+="\n"
+        n+= str(bst.weights)#at some point, I shoud improve this. A lot 
+        return n

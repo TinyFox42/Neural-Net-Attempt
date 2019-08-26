@@ -21,13 +21,7 @@ def step(pop):
     #Calls some functions on the pop. The net will be modified. No real need to return it, so it doesn't
     qs,ans=make_qs(1000)
     pop.test(qs,ans)
-    g,m,p,bst=pop.get_stats()
-    print "Generation: {0}".format(g)
-    print "Mean score: {0}".format(m)
-    print "Percentiles:"
-    for i in [0,1,2,3,4,5,6,7,8,9,10]:
-        print "\t{0}th: {1}".format(i*10, p[i])
-    print bst.weights
+    print pop.fancy_stats()
     pop.cull()
     pop.repop()
     
