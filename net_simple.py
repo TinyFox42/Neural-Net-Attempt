@@ -1,3 +1,20 @@
+#Config stuff here:
+
+#mutation chances. Right now, these are times it will occur out of chance_base tries (theoretically)
+chance_base=100
+weight_chance=5 #chance that a weight will mutate. Rolled once per weight
+node_chance=1 #chance that a new node will appear. Rolled once per layer
+
+
+#####End config, start code#####
+#Config sanity check: (as in, won't raise errors, not works well)
+chance_base=int(chance_base)
+if chance_base<=1:
+    chance_base=2
+weight_chance=int(weight_chance)
+node_chance=int(node_chance)
+
+#Start real code
 import decimal
 decimal.getcontext().prec = 100
 import random 
@@ -7,8 +24,7 @@ def random_weight():
     return random.normalvariate(0, 1)
 def mutate_weight(w):
     return w+random.normalvariate(0, 0.5)
-    
-weight_chance=5
+
 class net(object):
     @staticmethod
     def activate(x):
@@ -17,21 +33,38 @@ class net(object):
         a=1/(1+math.e**(-x))
         return a
         
+    def add_node(self, layer):
+        #layer should be the index for the val layer it is added in
+        self.vals[layer].append(None)
+        self.weights[layer-1]+=[]
+        for i in range(len(self.weights[layer-1])):
+            #can you tell that I made this at a different time from the rest of this code?
+            self.weights[layer-1][-1].append(random_weight())
+            #See, here I was smart, and remembered that append() existed, instead of muddling with +=[]. Later on I might test to see which is faster, and possibly optimize the rest of this code
+        self.weights[layer-1][-1].append(random_weight()) #For the bias
+        for i in range(len(self.weights[layer])):#layer-1+1=layer
+            #loop for the nodes one layer up
+            x=self.weights[layer][i][-1]#need to save the bias. Ok, that sounds so bad, but it's the term for a constant value in a neural net
+            self.weights[layer][i][-1]=random_weight()
+            self.weights[layer][i].append(x)
+        
     def mutate(self):
         #right now just has some random variations to the weights, maybe does something else later on
         for l in self.weights:#layer
+            if random.randint(1,chance_base)<=node_chance:
+                self.add_node(l-1)
             for s in l:#node_target
                 for i in range(len(s)):#node_source
-                    if random.randint(1,100)<=weight_chance:
+                    if random.randint(1,chance_base)<=weight_chance:
                         w=mutate_weight(s[i])
                         s[i]=w
         
     def __init__(self, inputs, outputs, inners=[]):
-        self.vals=[[None]*inputs]
+        self.vals=[[None]*inputs] #A place to store the data
         for l in inners:
             self.vals+=[[None]*l]
         self.vals+=[[None]*outputs]
-        self.weights=[]
+        self.weights=[] #the weights of the connections
         
     def random_weights(self):
         #Note, resets the weights set
