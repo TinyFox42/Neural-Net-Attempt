@@ -26,6 +26,7 @@ class population(object):
     def test(self, qs, ans_data, ans_function=simple_ans_check):
         self.gen+=1
         for a, n in enumerate(self.nets):
+            x=0
             for i in range(len(qs)):
                 n[0].assign(qs[i])
                 try:
@@ -41,8 +42,9 @@ class population(object):
                     print "Full error report:"
                     print "{0}".format(sys.exc_info()[0])
                     raise #comment this out if you want this to fail passively
-                x=n[0].retrieve()
-                n[1]+=ans_function(x, ans_data[i])
+                b=n[0].retrieve()
+                x+=ans_function(b, ans_data[i])
+            n[1]=x #Calling a part of a list only once should slightly improve speed
     def cull(self):
         tot=[]
         for n in self.nets:

@@ -35,6 +35,13 @@ class net(object):
         
     def add_node(self, layer):
         #layer should be the index for the val layer it is added in
+        if layer==(len(self.vals)-1):
+            print "Well, something got messed up. It tried to add a node to the top layer. So I'm just going to stop the mutation here."
+            raise
+        if layer==0:
+            print "Well, this is even weirder. It did the lowest layer..."
+            raise
+        #print "To layer {0}, total {1} layers".format(layer, len(self.vals))
         self.vals[layer].append(None)
         w=[]
         for i in range(len(self.weights[layer-1])):
@@ -54,7 +61,7 @@ class net(object):
         for l in range(len(self.weights)):#layer
             if l<len(self.weights)-1:#so that the output layer doesn't get a new node
                 if random.randint(1,chance_base)<=node_chance:
-                    self.add_node(l-1)
+                    self.add_node(l+1)
             for s in range(len(self.weights[l])):#node_target
                 for i in range(len(self.weights[l][s])):#node_source
                     if random.randint(1,chance_base)<=weight_chance:
@@ -99,7 +106,8 @@ class net(object):
     
     def assign(self, ins):
         if len(self.vals[0])!=len(ins):
-            return "Input count mismatch. This net should have {0} inputs, not {1}.".format(len(self.vals[0]), len(ins))
+            print "Input count mismatch. This net should have {0} inputs, not {1}.".format(len(self.vals[0]), len(ins))
+            raise
         for i in range(len(ins)):
             self.vals[0][i]=ins[i]
     
