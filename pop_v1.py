@@ -2,6 +2,9 @@ import net_simple
 import numpy
 import random
 reload(net_simple)
+
+#Specifically here for debugging:
+import sys
 def simple_ans_check(ans, ans_data):
     #the ans data should be the index that should be the highest
     m=max(ans)
@@ -22,10 +25,22 @@ class population(object):
             self.nets+=[[n, 0]]
     def test(self, qs, ans_data, ans_function=simple_ans_check):
         self.gen+=1
-        for n in self.nets:
+        for a, n in enumerate(self.nets):
             for i in range(len(qs)):
                 n[0].assign(qs[i])
-                n[0].calc()
+                try:
+                    n[0].calc()
+                except:
+                    print "Broke on net #{0}".format(a)
+                    print "This was question #{0}".format(i)
+                    print "Ok, here's a data dump:"
+                    print "Weights: {0}".format(n[0].weights)
+                    print "Vals: {0}".format(n[0].vals)
+                    print "Q:{0}".format(qs[i])
+                    print "A:{0}".format(ans_data[i])
+                    print "Full error report:"
+                    print "{0}".format(sys.exc_info()[0])
+                    raise #comment this out if you want this to fail passively
                 x=n[0].retrieve()
                 n[1]+=ans_function(x, ans_data[i])
     def cull(self):

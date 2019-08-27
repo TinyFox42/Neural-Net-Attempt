@@ -52,7 +52,7 @@ class net(object):
     def mutate(self):
         #right now just has some random variations to the weights, maybe does something else later on
         for l in range(len(self.weights)):#layer
-            if l<len(self.weights):#so that the output layer doesn't get a new node
+            if l<len(self.weights)-1:#so that the output layer doesn't get a new node
                 if random.randint(1,chance_base)<=node_chance:
                     self.add_node(l-1)
             for s in range(len(self.weights[l])):#node_target
