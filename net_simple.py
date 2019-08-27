@@ -36,12 +36,13 @@ class net(object):
     def add_node(self, layer):
         #layer should be the index for the val layer it is added in
         self.vals[layer].append(None)
-        self.weights[layer-1]+=[]
+        w=[]
         for i in range(len(self.weights[layer-1])):
             #can you tell that I made this at a different time from the rest of this code?
-            self.weights[layer-1][-1].append(random_weight())
+            w.append(random_weight())
             #See, here I was smart, and remembered that append() existed, instead of muddling with +=[]. Later on I might test to see which is faster, and possibly optimize the rest of this code
-        self.weights[layer-1][-1].append(random_weight()) #For the bias
+        w.append(random_weight()) #For the bias
+        self.weights[layer-1].append(w)
         for i in range(len(self.weights[layer])):#layer-1+1=layer
             #loop for the nodes one layer up
             x=self.weights[layer][i][-1]#need to save the bias. Ok, that sounds so bad, but it's the term for a constant value in a neural net
@@ -50,14 +51,15 @@ class net(object):
         
     def mutate(self):
         #right now just has some random variations to the weights, maybe does something else later on
-        for l in self.weights:#layer
-            if random.randint(1,chance_base)<=node_chance:
-                self.add_node(l-1)
-            for s in l:#node_target
-                for i in range(len(s)):#node_source
+        for l in range(len(self.weights)):#layer
+            if l<len(self.weights):#so that the output layer doesn't get a new node
+                if random.randint(1,chance_base)<=node_chance:
+                    self.add_node(l-1)
+            for s in range(len(self.weights[l])):#node_target
+                for i in range(len(self.weights[l][s])):#node_source
                     if random.randint(1,chance_base)<=weight_chance:
-                        w=mutate_weight(s[i])
-                        s[i]=w
+                        w=mutate_weight(self.weights[l][s][i])
+                        self.weights[l][s][i]=w
         
     def __init__(self, inputs, outputs, inners=[]):
         self.vals=[[None]*inputs] #A place to store the data
@@ -85,7 +87,11 @@ class net(object):
                 x=0 #count of effects
                 w=self.weights[i-1][j] #weights for this node
                 for k in range(len(self.vals[i-1])): #lower nodes
-                    n=w[k]*self.vals[i-1][k]
+                    if type(w[k])==type(None):
+                        print "Weight is none"
+                    if type(self.vals[i-1][k])==type(None):
+                        print "Val is none"
+                    n=w[k]*self.vals[i-1][k] #somehow, one of these is a null
                     x+=n
                 x+=w[-1]
                 x=net.activate(x)

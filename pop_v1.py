@@ -1,7 +1,7 @@
 import net_simple
 import numpy
 import random
-#reload(net_simple)
+reload(net_simple)
 def simple_ans_check(ans, ans_data):
     #the ans data should be the index that should be the highest
     m=max(ans)
